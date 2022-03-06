@@ -1,0 +1,18 @@
+{% extends "Header.html" %}
+{% block title %}Створити{% endblock %}
+{% block content %}
+<div class="FormBox">
+ <form method="post" id="data" action="{% url 'type_index' type_name=short_name index=index %}">
+     {% csrf_token %}
+     {% for parameter in parameters %}
+     <div class="item">
+        <p>{{ parameter.name }}:</p>
+        <input type={{ parameter.html_type }} id={{ parameter.type }} name={{ parameter.name }}>
+    </div>
+     {% endfor %}
+     <div class="btn-block">
+          <button type="submit">Створити</button>
+    </div>
+ </form>
+ </div>
+{% endblock %}

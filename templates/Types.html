@@ -1,0 +1,31 @@
+{% extends "Header.html" %}
+{% block title %}Типи{% endblock %}
+{% block content %}
+{% if deep %}
+    <div class="typeList" >
+        <table><tr>{% for parameter in parameters %}<th>{{ parameter }}</th>{% endfor %}</tr>
+             {% for type in values %}
+                 <tr>
+                     {% for item in type.1 %}
+                         {% if forloop.counter == 1 %}
+                         <td><a href="{% url 'type_index' type_name type.0%}">{{ item }}</a></td>
+                         {% else %}
+                         <td><a>{{ item }}</a></td>
+                         {% endif %}
+                     {% endfor %}
+                 <td><form action="{% url 'type_index_delete' type_name type.0 %}" style="all: unset">
+                     <input type=submit value="Видалити" style="width:100%"></form></td>
+                 </tr>
+             {% endfor %}
+        </table>
+    </div>
+{% else %}
+    <div class="types">
+        <ul>
+            {% for type in values %}
+                <li><a href="{{ type.0 }}" >{{ type.1 }}</a></li>
+            {% endfor %}
+        </ul>
+    </div>
+{% endif %}
+{% endblock %}

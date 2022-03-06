@@ -1,0 +1,34 @@
+{% extends "Header.html" %}
+{% block title %}Тип-оновити{% endblock %}
+{% block content %}
+<div class="FormBox">
+ <form method="post" id="data" action="{% url 'about_type' type_obj.short_name %}">
+     {% csrf_token %}
+     <div class="item">
+        <p>Повна назва:</p>
+        <input type="text" id="full_name" name="full_name" value="{{ type_obj.full_name }}">
+     </div>
+     <div class="item">
+        <p>Коротка назва:</p>
+        <input type="text" id="short_name" name="short_name" value="{{ type_obj.short_name }}">
+     </div>
+     <div class="checkboxes">
+         <label>Параметри</label>
+         <ul style="list-style: none; margin: 0;">
+             {% for parameter in parameters %}
+                 {% if parameter in type_obj.parameters.all %}
+                     <li><input style="width: unset" checked type="checkbox"
+                                name="parameters" value="{{ parameter.id }}">{{ parameter }}</li>
+                 {% else %}
+                     <li><input style="width: unset" type="checkbox"
+                                name="parameters" value="{{ parameter.id }}">{{ parameter }}</li>
+                 {% endif %}
+             {% endfor %}
+         </ul>
+     </div>
+     <div class="btn-block">
+          <button type="submit">Оновити</button>
+    </div>
+ </form>
+ </div>
+{% endblock %}

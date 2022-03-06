@@ -1,0 +1,27 @@
+{% extends "Header.html" %}
+{% block title %}Параметер-створити{% endblock %}
+{% block content %}
+<div class="FormBox">
+ <form method="post" id="data" action="{% url 'create_parameter' %}">
+     {% csrf_token %}
+     <div class="item">
+        <p>Назва:</p>
+        <input type=text id=name name=name>
+     </div>
+     <div class="item">
+        <p>Назва англійською:</p>
+        <input type=text id=type name=type>
+     </div>
+     <div class="item">
+        <select name="html_type" required>
+            {% for html_type in html_types %}
+            <option value="{{ html_type }}">{{ html_type }}</option>
+            {% endfor %}
+        </select>
+    </div>
+     <div class="btn-block">
+          <button type="submit">Створити</button>
+    </div>
+ </form>
+ </div>
+{% endblock %}

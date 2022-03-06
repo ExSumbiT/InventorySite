@@ -1,0 +1,53 @@
+{% extends "Header.html" %}
+{% block title %}Імпорт{% endblock %}
+{% block content %}
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+    <form enctype="multipart/form-data" method="post" id="file" action="{% url 'import_xlsx' %}">
+        {% csrf_token %}
+        <input type="file" id="xlsx" name="xlsx" />
+        <button type="submit">Імпорт</button>
+    </form>
+{#    <div id="place_for_data"></div>#}
+    <script>
+    function createTable(tableData) {
+        var table = document.createElement('table');
+        var tableBody = document.createElement('tbody');
+
+        tableData.forEach(function(rowData) {
+            var row = document.createElement('tr');
+
+            rowData.forEach(function(cellData) {
+                var cell = document.createElement('td');
+                cell.appendChild(document.createTextNode(cellData));
+                row.appendChild(cell);
+            });
+
+            tableBody.appendChild(row);
+        });
+
+        table.appendChild(tableBody);
+        document.body.appendChild(table)
+        {#$("#place_for_data").appendChild(table);#}
+    }
+
+
+    $("#xlsx").change(function(){
+        var formData = new FormData();
+        formData.append("file", this.files[0]);
+        $.ajax({
+            url: "preview/",
+            type: "post",
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function(response) {
+                console.log(response)
+                createTable(response)
+              },
+          error: function(xhr) {
+                console.log(xhr)
+          }
+        });
+    });
+    </script>
+{% endblock %}

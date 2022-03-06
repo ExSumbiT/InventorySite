@@ -1,0 +1,56 @@
+{% load static %}
+{% load poll_extras %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% block head %}
+    <link rel="stylesheet" href="{% static 'css/Header.css' %}">
+    <meta charset="UTF-8">
+    <title>{% block title %}{% endblock %}</title>
+    {% endblock %}
+</head>
+<body>
+{% block auth %}
+{% with form=''|login_form %}
+<div class="header">
+    <span class="urls">
+        <a href="{% url 'main' %}">Головна</a>
+        <a href="{% url 'types' %}">Інвентаризація</a>
+    </span>
+    <span class="user">
+        {% if request.user.is_authenticated %}
+            <div class="isLogin">
+                <div class="dropdown">
+                  <button class="dropbtn">{{ request.user.username }}</button>
+                  <div class="dropdown-content">
+                    <a href="{% url 'profile' %}">Профіль</a>
+                    <a href="{% url 'import_xlsx' %}">Імпорт</a>
+                    <form style="all: unset" action="{% url "user_logout" %}" method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="next" value="{{ request.path }}" />
+                    <input style="width: 100%" type="submit" value="Вийти" />
+                    </form>
+                  </div>
+                </div>
+            </div>
+            <div style="clear:both;"></div>
+        {% else %}
+            <div style="clear:both;"></div>
+            <div class="notLogin">
+                <form action="{% url "user_login" %}" method="post">
+                    {{ form.as_p }}
+                    {% csrf_token %}
+                    <input type="hidden" name="next" value="{{ request.path }}">
+                    <p><input type="submit" value="Ввійти"></p>
+                </form>
+            </div>
+        {% endif %}
+    </span>
+</div>
+{% endwith %}
+{% endblock %}
+<div id="content">{% if request.user.is_authenticated %}
+    {% block content %}{% endblock %}
+{% endif %}</div>
+</body>
+</html>

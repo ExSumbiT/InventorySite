@@ -1,0 +1,23 @@
+{% extends "Header.html" %}
+{% block title %}Індекс{% endblock %}
+{% block content %}
+    {% if request.user.is_superuser %}
+        <a>Hello {{ request.user.username }}</a>
+        <div class="FormBox">
+        <form action="{% url 'change_password' %}" method="post">
+            {% csrf_token %}
+            <div class="item">
+                <p>Новий пароль:</p>
+                <input type=password id=new_password name=new_password>
+            </div>
+            <div class="item">
+                <p>Підтвердженя паролю:</p>
+                <input type=password id=confirm_password name=confirm_password>
+            </div>
+            <div class="btn-block">
+                <button type="submit">Змінити пароль</button>
+            </div>
+        </form>
+        </div>
+    {% endif %}
+{% endblock %}

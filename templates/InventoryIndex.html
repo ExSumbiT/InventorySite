@@ -1,0 +1,18 @@
+{% extends "Header.html" %}
+{% block title %}{{ short_name }} {{ index }}{% endblock %}
+{% block content %}
+<div class="FormBox">
+ <form method="post" id="data" action="{% url 'type_index' type_name=short_name index=index %}">
+     {% csrf_token %}
+     {% for value in values %}
+     <div class="item">
+        <p>{{ value.0.name }}:</p>
+        <input type={{ value.0.html_type }} id={{ value.0.type }} name={{ value.0.name }} value={{ value.1 }}>
+    </div>
+     {% endfor %}
+     <div class="btn-block">
+          <button type="submit">Оновити</button>
+    </div>
+ </form>
+ </div>
+{% endblock %}

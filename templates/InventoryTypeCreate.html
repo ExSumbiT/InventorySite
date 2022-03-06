@@ -1,0 +1,27 @@
+{% extends "Header.html" %}
+{% block title %}Тип-створити{% endblock %}
+{% block content %}
+<div class="FormBox">
+ <form method="post" id="data" action="{% url 'create_type' %}">
+     {% csrf_token %}
+     <div class="item">
+        <p>Повна назва:</p>
+        <input type=text id=full_name name=full_name>
+     </div>
+     <div class="item">
+        <p>Коротка назва:</p>
+        <input type=text id=short_name name=short_name>
+     </div>
+     <div class="item">
+        <select name="parameters" multiple required>
+            {% for parameter in parameters %}
+            <option value="{{ parameter }}">{{ parameter }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="btn-block">
+          <button type="submit">Створити</button>
+    </div>
+ </form>
+ </div>
+{% endblock %}
