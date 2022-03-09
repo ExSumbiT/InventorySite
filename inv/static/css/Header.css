@@ -131,6 +131,19 @@ li {
       margin-bottom: 0.25%;
 }
 
+.notLogin {
+      margin-left: auto;
+      margin-right: auto;
+      width: 60%;
+      padding: 10px;
+}
+
+.notLogin input {
+      margin-left: auto;
+      margin-right: auto;
+      display: block;
+}
+
 .isLogin {
       float: right;
       margin-right: 2%;
