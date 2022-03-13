@@ -1,5 +1,8 @@
 html, body {
-      min-height: 100%;
+    min-height: 100%;
+    height: 100%;
+    margin: 0;
+    background-image: linear-gradient(to bottom right, rgb(165, 4, 194), rgb(68, 97, 255));
       }
 body, div, form, input, select, p {
       padding: 0;
@@ -22,6 +25,7 @@ h1 {
       padding: 3px;
 }
 form {
+    background-image: inherit;
       width: calc(100% - 40px);
       padding: 20px;
       background: #fff;
@@ -131,6 +135,85 @@ li {
       margin-bottom: 0.25%;
 }
 
+.container {
+	height: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-direction: column;
+	color: #fff;
+}
+
+.header-bar {
+	position: relative;
+	margin: auto;
+	width: calc(100% - 20px);
+	min-width: 300px;
+	height: 50px;
+	border: 10px solid transparent;
+	border-top: 10px solid #fffa;
+	border-left: 10px solid #fffa;
+	box-shadow: 4px 4px 5px rgba(0, 0, 0, 0.25) inset;
+}
+.header-bar::after {
+	content: '';
+	position: absolute;
+	top: -10px;
+	right: -10px;
+	width: 30%;
+	height: 49px;
+	border: 10px solid transparent;
+	border-bottom: 10px solid #fffa;
+	border-right: 10px solid #fffa;
+	transition: 0.3s linear all;
+}
+.header-bar > .logo {
+	position: absolute;
+	top: calc(50% - 20px);
+	left: 10px;
+	transform: translateY(-50%);
+	color: #fffc;
+	font-family: 'Parisienne', cursive;
+	cursor: default;
+	user-select: none;
+}
+.slider-menu {
+	position: sticky;
+	top: 0;
+	right: 0;
+	display: flex;
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+	z-index: 1;
+}
+.slider-menu > a {
+    float: left;
+	display: inline-flex;
+	padding: 14px;
+	margin-left: 2px;
+	color: #000000;
+	cursor: pointer;
+	transition: 0.3s linear all;
+	user-select: none;
+}
+.slider-menu > a:hover {
+	color: #faa;
+	box-shadow: 0 50px 5px rgba(0, 0, 0, 0.15) inset;
+}
+.aeu-signature {
+	position: fixed;
+	top: 5px;
+	left: 50%;
+	transform: translate(-50%);
+	font-size: 15px;
+	line-height: 30px;
+	background-color: #fff;
+	padding: 5px 10px;
+	border-radius: 25px;
+	box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+}
+
 .notLogin {
       margin-left: auto;
       margin-right: auto;
@@ -147,11 +230,6 @@ li {
 .isLogin {
       float: right;
       margin-right: 2%;
-}
-
-.urls {
-      float: left;
-      margin-left: 2%;
 }
 
 .types {

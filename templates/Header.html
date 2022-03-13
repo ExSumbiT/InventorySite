@@ -12,8 +12,8 @@
 <body>
 {% block auth %}
 {% with form=''|login_form %}
-<div class="header">
-    <span class="urls">
+<div class="header-bar">
+    <span class="urls slider-menu">
         <a href="{% url 'main' %}">Головна</a>
         <a href="{% url 'types' %}">Інвентаризація</a>
     </span>
