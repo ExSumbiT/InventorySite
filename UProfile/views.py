@@ -1,7 +1,7 @@
 from django.shortcuts import render, HttpResponseRedirect, HttpResponse
 from django.http import JsonResponse
 from django.conf import settings
-from inv.models import Parameter
+from inv.models import Parameter, InventoryType
 from inv.views import parse_xlsx
 from django.core.files.storage import default_storage
 import pandas as pd
@@ -16,7 +16,8 @@ from django.contrib.auth.models import User
 
 def profile(request):
     parameters = Parameter.objects.all()
-    return render(request, 'Profile.html', context={'parameters': parameters})
+    inventory_types = InventoryType.objects.all()
+    return render(request, 'Profile.html', context={'parameters': parameters, 'inventory_types': inventory_types})
 
 
 @csrf_exempt
