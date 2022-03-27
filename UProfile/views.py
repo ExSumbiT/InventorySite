@@ -10,6 +10,7 @@ import os
 import pyqrcode
 from PIL import Image, ImageDraw, ImageFont
 import textwrap
+from zipfile import ZipFile
 from django.contrib.auth.models import User
 
 
@@ -55,7 +56,11 @@ def change_password(request):
 
 
 def qr_create(inv_type: str, ind: str, url: str):
-    if os.path.exists(os.path.join(settings.STATIC_ROOT, f'qr-code/{inv_type}/qr_{ind}.png')):
+    if not os.path.exists(os.path.join(settings.MEDIA_ROOT, f'qr-code/{inv_type}')):
+        os.makedirs(os.path.join(settings.MEDIA_ROOT, f'qr-code/{inv_type}'))
+    if not os.path.exists(os.path.join(settings.MEDIA_ROOT, f'temp')):
+        os.makedirs(os.path.join(settings.MEDIA_ROOT, f'temp'))
+    if os.path.exists(os.path.join(settings.MEDIA_ROOT, f'qr-code/{inv_type}/qr_{ind}.png')):
         return f'qr-code/{inv_type}/qr_{ind}.png'
     w = 30  # 100 pixels wide
     h = 50  # 100 pixels high
@@ -68,17 +73,17 @@ def qr_create(inv_type: str, ind: str, url: str):
         width, height = font.getsize(line)
         canvas.text(((w - width) / 2, y_text), line, font=font, fill='#000000')
         y_text += height * 3 / 2
-    img.save(os.path.join(settings.STATIC_ROOT, 'temp/logo.png'), "PNG")
+    img.save(os.path.join(settings.MEDIA_ROOT, 'temp/logo.png'), "PNG")
     # Generate the qr code and save as png
     qrobj = pyqrcode.QRCode(url, error='H')
-    qrobj.png(os.path.join(settings.STATIC_ROOT, f'temp/qr_{inv_type}{ind}.png'), scale=3)
+    qrobj.png(os.path.join(settings.MEDIA_ROOT, f'temp/qr_{inv_type}{ind}.png'), scale=3)
     # Now open that png image to put the logo
-    img = Image.open(os.path.join(settings.STATIC_ROOT, f'temp/qr_{inv_type}{ind}.png'))
+    img = Image.open(os.path.join(settings.MEDIA_ROOT, f'temp/qr_{inv_type}{ind}.png'))
     width, height = img.size
     # How big the logo we want to put in the qr code png
     logo_size = 30
     # Open the logo image
-    logo = Image.open(os.path.join(settings.STATIC_ROOT, 'temp/logo.png'))
+    logo = Image.open(os.path.join(settings.MEDIA_ROOT, 'temp/logo.png'))
     img = img.convert("RGBA")
     # Calculate xmin, ymin, xmax, ymax to put the logo
     xmin = ymin = int((width / 2) - (logo_size / 2))
@@ -87,18 +92,32 @@ def qr_create(inv_type: str, ind: str, url: str):
     logo = logo.resize((xmax - xmin, ymax - ymin))
     # put the logo in the qr code
     img.paste(logo, (xmin, ymin, xmax, ymax))
-    img.save(os.path.join(settings.STATIC_ROOT, f'qr-code/{inv_type}/qr_{ind}.png'))
-    os.remove(os.path.join(settings.STATIC_ROOT, 'temp/logo.png'))
-    os.remove(os.path.join(settings.STATIC_ROOT, f'temp/qr_{inv_type}{ind}.png'))
+    img.save(os.path.join(settings.MEDIA_ROOT, f'qr-code/{inv_type}/qr_{ind}.png'))
+    os.remove(os.path.join(settings.MEDIA_ROOT, 'temp/logo.png'))
+    os.remove(os.path.join(settings.MEDIA_ROOT, f'temp/qr_{inv_type}{ind}.png'))
     return f'qr-code/{inv_type}/qr_{ind}.png'
 
 
 def qr_range(request):
-    pass
+    inv_type = request.POST['inv_type']
+    index_from = request.POST['index_from']
+    index_to = request.POST['index_to']
+    zip_obj = ZipFile(os.path.join(settings.MEDIA_ROOT, f'{inv_type}_{index_from}-{index_to}.zip'), 'w')
+    for ind in range(int(index_from), int(index_to)+1):
+        ind = str(ind)
+        img = qr_create(inv_type, ind, request.build_absolute_uri(f'/inv/{inv_type}/{ind}'))
+        zip_obj.write(os.path.join(settings.MEDIA_ROOT, img), img.split('/')[-1])
+    zip_obj.close()
+    with open(os.path.join(settings.MEDIA_ROOT, f'{inv_type}_{index_from}-{index_to}.zip'), 'rb') as dw:
+        response = HttpResponse(dw.read(), content_type="application/vnd.ms-excel")
+        response['Content-Disposition'] = f'inline; filename={inv_type}_{index_from}-{index_to}.zip'
+    os.remove(os.path.join(settings.MEDIA_ROOT, f'{inv_type}_{index_from}-{index_to}.zip'))
+    return response
 
 
 def qr(request):
+    print(request.build_absolute_uri('/'))
     inv_type = request.POST['inv_type']
     ind = request.POST['index']
-    img = qr_create(inv_type, ind, request.build_absolute_uri())
+    img = qr_create(inv_type, ind, request.build_absolute_uri(f'/inv/{inv_type}/{ind}'))
     return HttpResponseRedirect(f'/static/{img}')

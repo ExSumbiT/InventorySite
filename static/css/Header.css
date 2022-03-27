@@ -10,7 +10,7 @@ body, div, form, input, select, p {
       outline: none;
       font-family: Roboto, Arial, sans-serif;
       font-size: 18px;
-      color: #666;
+      color: inherit;
       line-height: 22px;
 }
 h1 {
@@ -28,7 +28,7 @@ form {
     background-image: inherit;
       width: calc(100% - 40px);
       padding: 20px;
-      background: #fff;
+      background: transparent;
       box-shadow: 0 2px 5px #ccc;
 }
 input, select, textarea {
@@ -79,7 +79,7 @@ input[type="date"]::-webkit-inner-spin-button {
 .item i, input[type="date"]::-webkit-calendar-picker-indicator {
       position: absolute;
       font-size: 20px;
-      color: #a9a9a9;
+      color: inherit;
 }
 .item i {
       right: 1%;
@@ -98,16 +98,17 @@ input[type="date"]::-webkit-inner-spin-button {
       text-align: center;
 }
 button {
-      width: 150px;
-      padding: 10px;
-      border: none;
-      -webkit-border-radius: 5px;
-      -moz-border-radius: 5px;
-      border-radius: 5px;
-      background-color: transparent;
-      font-size: 16px;
-      color: transparent;
-      cursor: pointer;
+    width: 150px;
+    padding: 10px;
+    border: none;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    background-color: inherit;
+    font-size: 16px;
+    color: inherit;
+    cursor: pointer;
+    box-shadow: 0 0 5px 0 #095484;
 }
 button:hover {
       background-color: transparent;
@@ -208,7 +209,7 @@ li {
 	transform: translate(-50%);
 	font-size: 15px;
 	line-height: 30px;
-	background-color: #fff;
+	background-color: transparent;
 	padding: 5px 10px;
 	border-radius: 25px;
 	box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
@@ -274,7 +275,7 @@ table, th, td {
       border-radius: 12px;
   display: none;
   position: absolute;
-  background-color: #f1f1f1;
+  background-color: transparent;
   min-width: 160px;
   box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
   z-index: 1;

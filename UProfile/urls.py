@@ -15,6 +15,8 @@ Including another URLconf
 """
 from django.urls import path
 from UProfile import views
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     # path('<str:type_name>/<int:index>', views.type_index, name='type_index'),
@@ -30,4 +32,4 @@ urlpatterns = [
     path('import/preview/', views.preview, name='preview'),
     path('import/', views.import_xlsx, name='import_xlsx'),
     path('', views.profile, name='profile'),
-]
+] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

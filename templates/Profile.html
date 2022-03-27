@@ -19,5 +19,26 @@
             </div>
         </form>
         </div>
+        <br>
+        <div class="FormBox">
+        <form action="{% url 'qr_range' %}" method="post">
+            {% csrf_token %}
+            <div class="item">
+                <p>inv_type</p>
+                <input type="text" id="inv_type" name="inv_type">
+            </div>
+            <div class="item">
+                <p>index_from</p>
+                <input type="text" id="index_from" name="index_from" value="1">
+            </div>
+            <div class="item">
+                <p>index_to</p>
+                <input type="text" id="index_to" name="index_to" value="1">
+            </div>
+            <div class="btn-block">
+                <button type="submit">generate range</button>
+            </div>
+        </form>
+        </div>
     {% endif %}
 {% endblock %}
