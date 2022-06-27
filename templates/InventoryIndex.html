@@ -1,18 +1,68 @@
 {% extends "Header.html" %}
 {% block title %}{{ short_name }} {{ index }}{% endblock %}
 {% block content %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 <div class="FormBox">
  <form method="post" id="data" action="{% url 'type_index' type_name=short_name index=index %}">
      {% csrf_token %}
-     {% for value in values %}
-     <div class="item">
-        <p>{{ value.0.name }}:</p>
-        <input type={{ value.0.html_type }} id={{ value.0.type }} name={{ value.0.name }} value={{ value.1 }}>
-    </div>
-     {% endfor %}
-     <div class="btn-block">
-          <button type="submit">Оновити</button>
-    </div>
+     <div class="row justify-content-center">
+         <div class="col-md-4 text-center">
+             {% for value in values %}
+             <div class="form-group text-left">
+             <label for="{{ value.0.type }}">{{ value.0.name }}</label>
+             {% if value.0.type in 'person' %}
+             <select class="form-control" onChange="createTable()" required="required" id="{{ value.0.type }}" name="{{ value.0.type }}">
+                 <option selected value="{{ value.1 }}">{{ value.1 }}</option>
+                 <option value="рег." >Регіонали</option>
+                 {% for agent in agents %}
+                 <option value="{{ agent.name }}">{{ agent.fullname }}</option>
+                 {% endfor %}
+             </select>
+             {% elif value.0.type in 'point' %}
+             <input class="form-control" type="{{ value.0.html_type }}" id="{{ value.0.type }}" name="{{ value.0.type }}" list="point_l" value="{{ value.1 }}">
+             <datalist id="point_l">
+                 <option selected value="{{ value.1 }}">{{ value.1 }}</option>
+             </datalist>
+             {% else %}
+             <input class="form-control" type="{{ value.0.html_type }}" id="{{ value.0.type }}" name="{{ value.0.type }}" value="{{ value.1 }}">
+             {% endif %}
+             </div>
+             {% endfor %}
+             <button type="submit" class="btn btn-primary">Зберегти</button>
+         </div>
+     </div>
  </form>
  </div>
+<script>
+function createTable() {
+    var e = document.getElementById("person");
+    document.getElementById("point").value = "";
+    var city = e.options[e.selectedIndex].value;
+    var points = '{{points}}'.split('), (')
+    var theader = '<option selected value="" >...</option>';
+    var tbody = '<option selected value="Cклад">Склад</option><option selected value="Cписано">Списано</option>';
+    for (var i = 0; i < points.length; i++) {
+        // if(points[i].includes('(')){
+        //     var id = points[i].replaceAll("',", '').replaceAll('(', '').replaceAll(')', '').replaceAll("'", '')
+        // }
+        if (points[i].toLowerCase().includes(city.toLowerCase())) {
+            var point = points[i].replaceAll("&#x27;,", "").replaceAll('(', '').replaceAll(')', '').replaceAll("&#x27;", "").replaceAll("&quot;", "").replaceAll("[", "").replaceAll("]", "")
+            tbody += '<option value="' + point + '">'
+            // tbody += point
+            tbody += '</option>'
+        }
+        document.getElementById('point_l').innerHTML = theader + tbody;
+    }
+}
+
+function resizeInput() {
+    $(this).attr('size', $(this).val().length);
+}
+
+$('input[type="text"]')
+    // event handler
+    .keyup(resizeInput)
+    // resize on page load
+    .each(resizeInput);
+</script>
 {% endblock %}

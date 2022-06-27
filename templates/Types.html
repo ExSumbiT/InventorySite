@@ -1,31 +1,134 @@
 {% extends "Header.html" %}
+{% load static %}
+{% block link %}
+<link rel="stylesheet" href="{% static 'css/dataTables.bootstrap4.css' %}">
+{% endblock %}
 {% block title %}Типи{% endblock %}
 {% block content %}
-{% if deep %}
-    <div class="typeList" >
-        <table><tr>{% for parameter in parameters %}<th>{{ parameter }}</th>{% endfor %}</tr>
-             {% for type in values %}
-                 <tr>
-                     {% for item in type.1 %}
-                         {% if forloop.counter == 1 %}
-                         <td><a href="{% url 'type_index' type_name type.0%}">{{ item }}</a></td>
-                         {% else %}
-                         <td><a>{{ item }}</a></td>
-                         {% endif %}
-                     {% endfor %}
-                 <td><form action="{% url 'type_index_delete' type_name type.0 %}" style="all: unset">
-                     <input type=submit value="Видалити" style="width:100%"></form></td>
-                 </tr>
-             {% endfor %}
-        </table>
-    </div>
-{% else %}
-    <div class="types">
-        <ul>
-            {% for type in values %}
-                <li><a href="{{ type.0 }}" >{{ type.1 }}</a></li>
-            {% endfor %}
-        </ul>
-    </div>
-{% endif %}
+<div class="col-md-auto">
+    <div class="card shadow">
+        <div class="card-body">
+            <!-- table -->
+            <table class="table datatables" id="dataTable-1">
+                {% if deep %}
+                <thead>
+                <tr><th>Id</th>{% for parameter in parameters %}<th>{{ parameter }}</th>{% endfor %}<th>Дії</th></tr>
+                </thead>
+                <tbody>
+                {% for type in values %}
+                <tr>
+                    <td>{{ type.0 }}</td>
+                    {% for item in type.1 %}
+                    {% if forloop.first %}
+                    <td><a href="{% url 'type_index' type_name type.0%}">{{ item }}</a></td>
+                    {% else %}
+                    <td><a>{{ item }}</a></td>
+                    {% endif %}
+                    {% endfor %}
+                    <td>
+                        <button class="btn btn-sm dropdown-toggle more-horizontal" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <span class="text-muted sr-only">Action</span>
+                        </button>
+                        <div class="dropdown-menu dropdown-menu-right">
+                            {% with forloop.counter|stringformat:"s" as counter %}
+                            {% with "#varyModal"|add:counter as modal %}
+                            <a class="dropdown-item" href="#" data-toggle="modal" data-target="{{ modal }}"
+                               data-whatever="{{ forloop.counter }}">Переглянути</a> {% endwith %}{% endwith %}
+                            <a class="dropdown-item" href="{% url 'type_index' type_name type.0%}">Редагувати</a>
+                            <a class="dropdown-item" href="{% url 'type_index_delete' type_name type.0 %}">Видалити</a>
+                        </div>
+                    </td>
+                </tr>
+                <div class="modal fade" id="varyModal{{ forloop.counter }}" tabindex="-1" role="dialog" aria-labelledby="varyModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="varyModalLabel">{{ p_values }}</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <form>
+                                    {% csrf_token %}
+                                     <div class="row justify-content-center">
+                                         <div class="col-md-4 text-center">
+                                             {% for value in p_values.forloop.counter %}
+                                             <div class="form-group text-left">
+                                             <label for="{{ value.0.type }}">{{ value.0.name }}</label>
+                                             {% if value.0.type in 'person' %}
+                                             <select class="form-control" onChange="createTable()" required="required" id="{{ value.0.type }}" name="{{ value.0.type }}">
+                                                 <option selected value="{{ value.1 }}">{{ value.1 }}</option>
+                                                 <option value="рег." >Регіонали</option>
+                                                 {% for agent in agents %}
+                                                 <option value="{{ agent.name }}">{{ agent.fullname }}</option>
+                                                 {% endfor %}
+                                             </select>
+                                             {% elif value.0.type in 'point' %}
+                                             <input class="form-control" type="{{ value.0.html_type }}" id="{{ value.0.type }}" name="{{ value.0.type }}" list="point_l" value="{{ value.1 }}">
+                                             <datalist id="point_l">
+                                                 <option selected value="{{ value.1 }}">{{ value.1 }}</option>
+                                             </datalist>
+                                             {% else %}
+                                             <input class="form-control" type="{{ value.0.html_type }}" id="{{ value.0.type }}" name="{{ value.0.type }}" value="{{ value.1 }}">
+                                             {% endif %}
+                                             </div>
+                                             {% endfor %}
+                                         </div>
+                                     </div>
+                                </form>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn mb-2 btn-secondary" data-dismiss="modal">Закрити</button>
+                                <button type="submit" class="btn btn-primary">Зберегти</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+                </tbody>
+                {% else %}
+                <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Тип</th>
+                    <th>Кількість</th>
+                    <th>Дії</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for type in values %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td><a href="{{ type.0 }}">{{ type.1 }}</a></td>
+                    <td>{{ type.2 }}</td>
+                    <td>
+                        <button class="btn btn-sm dropdown-toggle more-horizontal" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <span class="text-muted sr-only">Action</span>
+                        </button>
+                        <div class="dropdown-menu dropdown-menu-right">
+                            <a class="dropdown-item" href="{{ type.0 }}">Переглянути</a>
+                            <a class="dropdown-item" href="#">Редагувати</a>
+                            <a class="dropdown-item" href="#">Видалити</a>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+                </tbody>
+                {% endif %}
+            </table>
+        </div>
+        </div>
+    </div> <!-- simple table -->
+{% endblock %}
+{% block script %}
+<script src="{% static 'js/jquery.dataTables.min.js' %}"></script>
+<script src="{% static 'js/dataTables.bootstrap4.min.js' %}"></script>
+<script>
+    $('#dataTable-1').DataTable(
+        {
+            autoWidth: true,
+            paging: false,
+        });
+</script>
 {% endblock %}

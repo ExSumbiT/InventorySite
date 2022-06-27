@@ -3,16 +3,18 @@
 {% block content %}
 <div class="FormBox">
  <form method="post" id="data" action="{% url 'type_index' type_name=short_name index=index %}">
+     <div class="row justify-content-center">
+         <div class="col-md-4 text-center">
      {% csrf_token %}
      {% for parameter in parameters %}
-     <div class="item">
-        <p>{{ parameter.name }}:</p>
-        <input type={{ parameter.html_type }} id={{ parameter.type }} name={{ parameter.name }}>
-    </div>
+     <div class="form-group text-left">
+         <label for="{{ parameter.type }}">{{ parameter.name }}</label>
+         <input type="{{ parameter.html_type }}" class="form-control" id="{{ parameter.type }}" name="{{ parameter.name }}">
+     </div>
      {% endfor %}
-     <div class="btn-block">
-          <button type="submit">Створити</button>
-    </div>
+     <button type="submit" class="btn btn-primary">Створити</button>
+         </div>
+     </div>
  </form>
  </div>
 {% endblock %}

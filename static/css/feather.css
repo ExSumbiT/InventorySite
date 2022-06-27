@@ -1,8 +1,8 @@
 @charset "UTF-8";
 @font-face {
   font-family: "feather";
-  src: url("../../../../Downloads/tinydash-master/tinydash-master/dark/fonts/feather.eot?29jl7i");
-  src: url("../../../../Downloads/tinydash-master/tinydash-master/dark/fonts/feather.eot?29jl7i#iefix") format("embedded-opentype"), url("../../../../Downloads/tinydash-master/tinydash-master/dark/fonts/feather.ttf?29jl7i") format("truetype"), url("../../../../Downloads/tinydash-master/tinydash-master/dark/fonts/feather.woff?29jl7i") format("woff"), url("../../../../Downloads/tinydash-master/tinydash-master/dark/fonts/feather.svg?29jl7i#feather") format("svg");
+  src: url("../fonts/feather.eot?29jl7i");
+  src: url("../fonts/feather.eot?29jl7i#iefix") format("embedded-opentype"), url("../fonts/feather.ttf?29jl7i") format("truetype"), url("../fonts/feather.woff?29jl7i") format("woff"), url("../fonts/feather.svg?29jl7i#feather") format("svg");
   font-weight: normal;
   font-style: normal;
   font-display: block; }

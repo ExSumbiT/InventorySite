@@ -32,7 +32,10 @@ def type_index(request, type_name, index):
             values = {}
             for parameter in type_parameters:
                 obj = Inventory.objects.filter(parameter=parameter, type__short_name=type_name, index=index)[0]
-                values[obj.parameter] = obj.value
+                if obj.parameter.html_type == 'date':
+                    values[obj.parameter] = obj.value.split(' ')[0]
+                else:
+                    values[obj.parameter] = obj.value
             return render(request, 'InventoryIndex.html', context={'short_name': type_name, 'index': index,
                                                                    'values': values.items()})
         return render(request, 'Inventory.html', context={'short_name': type_name, 'index': index,
@@ -57,16 +60,21 @@ def type_list(request, type_name):
         values[index] = []
         for parameter in InventoryType.objects.filter(short_name=type_name)[0].parameters.all():
             obj = Inventory.objects.filter(parameter=parameter, type__short_name=type_name, index=index)[0]
-            if obj.parameter.name not in parameters:
-                parameters.append(obj.parameter.name)
-            values[index].append(obj.value)
+            if obj.parameter.show:
+                if obj.parameter.name not in parameters:
+                    parameters.append(obj.parameter.name)
+                if obj.parameter.html_type == 'date':
+                    values[index].append(obj.value.split(' ')[0])
+                else:
+                    values[index].append(obj.value)
     return render(request, 'Types.html', context={'parameters': parameters, 'values': values.items(),
                                                   'deep': True, 'type_name': type_name})
 
 
 def types(request):
     type_obj_list = InventoryType.objects.all()
-    values = [[t.short_name, t.full_name] for t in type_obj_list]
+    values = [[t.short_name, t.full_name,
+               Inventory.objects.all().filter(type=t).values('index').distinct().count()] for t in type_obj_list]
     return render(request, 'Types.html', context={'values': values, 'deep': False})
 
 
