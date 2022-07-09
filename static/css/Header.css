@@ -2,7 +2,7 @@ html, body {
     min-height: 100%;
     height: 100%;
     margin: 0;
-    background-image: linear-gradient(to bottom right, rgb(165, 4, 194), rgb(68, 97, 255));
+    /*background-image: linear-gradient(to bottom right, rgb(165, 4, 194), rgb(68, 97, 255));*/
       }
 body, div, form, input, select, p {
       padding: 0;
