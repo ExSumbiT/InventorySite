@@ -82,7 +82,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form>
+                <form id="data">
                     {% csrf_token %}
                     <div class="row justify-content-center">
                         <div class="col-md-12 text-center">
@@ -93,55 +93,56 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn mb-2 btn-secondary" data-dismiss="modal">Закрити</button>
-                <button type="submit" class="btn btn-primary">Зберегти</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрити</button>
+                <button type="submit" form="data" class="btn btn-primary">Зберегти</button>
             </div>
         </div>
     </div>
 </div>
 {% endblock %}
 {% block script %}
-<script src="{% static 'js/jquery.dataTables.min.js' %}"></script>
-<script src="{% static 'js/dataTables.bootstrap4.min.js' %}"></script>
-<script>
-    {% if deep %}
-    $('#varyModal').on('show.bs.modal', function (event) {
-        var button = $(event.relatedTarget)
-        var index = button.data('whatever')
-        var url = "{% url 'api:type_index' type_name=type_name index=1 %}".replace(/1/, index.toString());
-        console.log(url)
-        var modal_body = ''
-        $.get(url, function(data, status){
-            data.data.forEach(function (arrayItem) {
-                var value = JSON.parse(arrayItem)
-                console.log(value);
-                modal_body += `<label for="${value.parameter.type}">${value.parameter.name}</label>`
-                if(value.parameter.html_type === 'date'){value.value = value.value.split(' ')[0]}
-                if(value.parameter.type === 'person'){
-                    modal_body += `<select class="form-control" onChange="createTable()" required="required"
-                        id="${value.parameter.type}" name="${value.parameter.type}">
-                        <option selected value="${ value.value }">${ value.value }</option>
-                        <option value="рег." >Регіонали</option>
-                        {% for agent in agents %}
-                        <option value="{{ agent.name }}">{{ agent.fullname }}</option>
-                        {% endfor %}
-                        </select>`
-                } else if(value.parameter.type === 'point'){
-                    modal_body += `<input class="form-control" type="${ value.parameter.html_type }" id="${ value.parameter.type }"
-                        name="${ value.parameter.type }" list="point_l" value="${ value.value }">
-                        <datalist id="point_l"><option selected value="${ value.value }">${ value.value }</option></datalist>`
-                } else{
-                    modal_body += `<input class="form-control" type="${ value.parameter.html_type }" id="${ value.parameter.type }" name="${ value.parameter.type }" value="${ value.value }">`
-                }
+    <script src="{% static 'js/jquery.dataTables.min.js' %}"></script>
+    <script src="{% static 'js/dataTables.bootstrap4.min.js' %}"></script>
+    <script>
+        {% if deep %}
+        $('#varyModal').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget)
+            var index = button.data('whatever')
+            var url = "{% url 'api:type_index' type_name=type_name index=1 %}".replace(/1/, index.toString());
+            console.log(url)
+            var modal_body = ''
+            $.get(url, function(data, status){
+                data.data.forEach(function (arrayItem) {
+                    var value = JSON.parse(arrayItem)
+                    console.log(value);
+                    modal_body += `<label for="${value.parameter.type}">${value.parameter.name}</label>`
+                    if(value.parameter.html_type === 'date'){value.value = value.value.split(' ')[0]}
+                    if(value.parameter.type === 'person'){
+                        modal_body += `<select class="form-control" onChange="createTable()" required="required"
+                            id="${value.parameter.type}" name="${value.parameter.type}">
+                            <option selected value="${ value.value }">${ value.value }</option>
+                            <option value="рег." >Регіонали</option>
+                            {% for agent in agents %}
+                            <option value="{{ agent.name }}">{{ agent.fullname }}</option>
+                            {% endfor %}
+                            </select>`
+                    } else if(value.parameter.type === 'point'){
+                        modal_body += `<input class="form-control" type="${ value.parameter.html_type }" id="${ value.parameter.type }"
+                            name="${ value.parameter.type }" list="point_l" value="${ value.value }">
+                            <datalist id="point_l"><option selected value="${ value.value }">${ value.value }</option></datalist>`
+                    } else{
+                        modal_body += `<input class="form-control" type="${ value.parameter.html_type }" id="${ value.parameter.type }" name="${ value.parameter.type }" value="${ value.value }">`
+                    }
+                });
+                document.getElementById('modal_body').innerHTML = modal_body
+                document.getElementById('data').action = `javascript:update("${url}")`
             });
-            document.getElementById('modal_body').innerHTML = modal_body
-        });
-    })
-    {% endif %}
-    $('#dataTable-1').DataTable(
-        {
-            autoWidth: true,
-            paging: false,
-        });
-</script>
+        })
+        {% endif %}
+        $('#dataTable-1').DataTable(
+            {
+                autoWidth: true,
+                paging: false,
+            });
+    </script>
 {% endblock %}

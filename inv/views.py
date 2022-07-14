@@ -19,8 +19,9 @@ def type_index(request, type_name, index):
     type_parameters = InventoryType.objects.filter(short_name=type_name)[0].parameters.all()
     if request.method == 'POST':
         values = []
+        print(request.POST)
         for parameter in type_parameters:
-            values.append(request.POST[parameter.name])
+            values.append(request.POST[parameter.type])
         if Inventory.objects.filter(type__short_name=type_name, index=index).count() > 0:
             update_inventory(InventoryType.objects.filter(short_name=type_name)[0], type_parameters, values, str(index))
             return redirect('type_index', type_name=type_name, index=index)

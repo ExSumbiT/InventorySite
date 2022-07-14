@@ -3,7 +3,7 @@
 {% block content %}
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 <div class="FormBox">
- <form method="post" id="data" action="{% url 'type_index' type_name=short_name index=index %}">
+ <form id="data" action="javascript:update('{% url 'api:type_index' type_name=short_name index=index %}')">
      {% csrf_token %}
      <div class="row justify-content-center">
          <div class="col-md-4 text-center">
@@ -33,8 +33,8 @@
      </div>
  </form>
  </div>
-<script>
-function createTable() {
+    <script>
+        function createTable() {
     var e = document.getElementById("person");
     document.getElementById("point").value = "";
     var city = e.options[e.selectedIndex].value;
@@ -54,15 +54,13 @@ function createTable() {
         document.getElementById('point_l').innerHTML = theader + tbody;
     }
 }
-
-function resizeInput() {
+        function resizeInput() {
     $(this).attr('size', $(this).val().length);
 }
-
 $('input[type="text"]')
     // event handler
     .keyup(resizeInput)
     // resize on page load
     .each(resizeInput);
-</script>
+    </script>
 {% endblock %}
