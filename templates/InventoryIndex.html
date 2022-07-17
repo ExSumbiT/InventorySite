@@ -1,7 +1,7 @@
 {% extends "Header.html" %}
+{% load poll_extras %}
 {% block title %}{{ short_name }} {{ index }}{% endblock %}
 {% block content %}
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 <div class="FormBox">
  <form id="data" action="javascript:update('{% url 'api:type_index' type_name=short_name index=index %}')">
      {% csrf_token %}
@@ -10,6 +10,12 @@
              {% for value in values %}
              <div class="form-group text-left">
              <label for="{{ value.0.type }}">{{ value.0.name }}</label>
+             {% if value.0.html_type == 'select' %}
+                 <select class="form-control" onChange="createTable()" required="required" id="{{ value.0.type }}" name="{{ value.0.type }}">
+                 {% for item in value.1|items %}
+                 {% endfor %}
+                 </select>
+             {% endif %}
              {% if value.0.type in 'person' %}
              <select class="form-control" onChange="createTable()" required="required" id="{{ value.0.type }}" name="{{ value.0.type }}">
                  <option selected value="{{ value.1 }}">{{ value.1 }}</option>
@@ -35,18 +41,18 @@
  </div>
     <script>
         function createTable() {
-    var e = document.getElementById("person");
+    let e = document.getElementById("person");
     document.getElementById("point").value = "";
-    var city = e.options[e.selectedIndex].value;
-    var points = '{{points}}'.split('), (')
-    var theader = '<option selected value="" >...</option>';
-    var tbody = '<option selected value="Cклад">Склад</option><option selected value="Cписано">Списано</option>';
-    for (var i = 0; i < points.length; i++) {
+    let city = e.options[e.selectedIndex].value;
+    let points = '{{points}}'.split('), (')
+    let theader = '<option selected value="" >...</option>';
+    let tbody = '<option selected value="Cклад">Склад</option><option selected value="Cписано">Списано</option>';
+    for (let i = 0; i < points.length; i++) {
         // if(points[i].includes('(')){
-        //     var id = points[i].replaceAll("',", '').replaceAll('(', '').replaceAll(')', '').replaceAll("'", '')
+        //     let id = points[i].replaceAll("',", '').replaceAll('(', '').replaceAll(')', '').replaceAll("'", '')
         // }
         if (points[i].toLowerCase().includes(city.toLowerCase())) {
-            var point = points[i].replaceAll("&#x27;,", "").replaceAll('(', '').replaceAll(')', '').replaceAll("&#x27;", "").replaceAll("&quot;", "").replaceAll("[", "").replaceAll("]", "")
+            let point = points[i].replaceAll("&#x27;,", "").replaceAll('(', '').replaceAll(')', '').replaceAll("&#x27;", "").replaceAll("&quot;", "").replaceAll("[", "").replaceAll("]", "")
             tbody += '<option value="' + point + '">'
             // tbody += point
             tbody += '</option>'

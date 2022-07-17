@@ -19,22 +19,22 @@
                 <tr>
                     <td>{{ type.0 }}</td>
                     {% for item in type.1 %}
-                    {% if forloop.first %}
-                    <td><a href="{% url 'type_index' type_name type.0%}">{{ item }}</a></td>
-                    {% else %}
+{#                    {% if forloop.first %}#}
+{#                    <td><a href="{% url 'type_index' type_name type.0%}">{{ item }}</a></td>#}
+{#                    {% else %}#}
                     <td><a>{{ item }}</a></td>
-                    {% endif %}
+{#                    {% endif %}#}
                     {% endfor %}
                     <td>
-                        <button class="btn btn-sm dropdown-toggle more-horizontal" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <span class="text-muted sr-only">Action</span>
-                        </button>
-                        <div class="dropdown-menu dropdown-menu-right">
-                            <a class="dropdown-item" href="#" data-toggle="modal" data-target="#varyModal"
-                               data-whatever="{{ type.0 }}">Переглянути</a>
-                            <a class="dropdown-item" href="{% url 'type_index' type_name type.0%}">Редагувати</a>
-                            <a class="dropdown-item" href="{% url 'type_index_delete' type_name type.0 %}">Видалити</a>
-                        </div>
+                        <a class="" href="#" data-toggle="modal" data-target="#varyModal"
+                               data-index="{{ type.0 }}">Перегляд
+                        </a>
+{#                        <div class="dropdown-menu dropdown-menu-right">#}
+{#                            <a class="dropdown-item" href="#" data-toggle="modal" data-target="#varyModal"#}
+{#                               data-whatever="{{ type.0 }}">Переглянути</a>#}
+{#                            <a class="dropdown-item" href="{% url 'type_index' type_name type.0%}">Редагувати</a>#}
+{#                            <a class="dropdown-item" href="{% url 'type_index_delete' type_name type.0 %}">Видалити</a>#}
+{#                        </div>#}
                     </td>
                 </tr>
                 {% endfor %}
@@ -95,6 +95,10 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрити</button>
                 <button type="submit" form="data" class="btn btn-primary">Зберегти</button>
+                <button type="submit" form="data" onclick="
+                if(confirm('Ви дійсно хочете видалити?')){document.getElementById('data').action =
+                document.getElementById('data').action.replace('api_update', 'api_delete')} else {return false}"
+                        class="btn btn-danger">Видалити</button>
             </div>
         </div>
     </div>
@@ -107,7 +111,7 @@
         {% if deep %}
         $('#varyModal').on('show.bs.modal', function (event) {
             var button = $(event.relatedTarget)
-            var index = button.data('whatever')
+            var index = button.data('index')
             var url = "{% url 'api:type_index' type_name=type_name index=1 %}".replace(/1/, index.toString());
             console.log(url)
             var modal_body = ''
@@ -135,7 +139,7 @@
                     }
                 });
                 document.getElementById('modal_body').innerHTML = modal_body
-                document.getElementById('data').action = `javascript:update("${url}")`
+                document.getElementById('data').action = `javascript:api_update("${url}")`
             });
         })
         {% endif %}

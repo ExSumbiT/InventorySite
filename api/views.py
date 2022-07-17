@@ -37,5 +37,6 @@ def type_index(request, type_name, index):
         return JsonResponse({'status': 'ok'})
 
     elif request.method == 'DELETE':
-        obj.delete()
+        for _ in obj:
+            _.delete()
         return HttpResponse(status=204)
