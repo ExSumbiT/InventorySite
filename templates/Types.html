@@ -19,22 +19,12 @@
                 <tr>
                     <td>{{ type.0 }}</td>
                     {% for item in type.1 %}
-{#                    {% if forloop.first %}#}
-{#                    <td><a href="{% url 'type_index' type_name type.0%}">{{ item }}</a></td>#}
-{#                    {% else %}#}
                     <td><a>{{ item }}</a></td>
-{#                    {% endif %}#}
                     {% endfor %}
                     <td>
                         <a class="" href="#" data-toggle="modal" data-target="#varyModal"
                                data-index="{{ type.0 }}">Перегляд
                         </a>
-{#                        <div class="dropdown-menu dropdown-menu-right">#}
-{#                            <a class="dropdown-item" href="#" data-toggle="modal" data-target="#varyModal"#}
-{#                               data-whatever="{{ type.0 }}">Переглянути</a>#}
-{#                            <a class="dropdown-item" href="{% url 'type_index' type_name type.0%}">Редагувати</a>#}
-{#                            <a class="dropdown-item" href="{% url 'type_index_delete' type_name type.0 %}">Видалити</a>#}
-{#                        </div>#}
                     </td>
                 </tr>
                 {% endfor %}

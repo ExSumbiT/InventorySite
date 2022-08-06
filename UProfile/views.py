@@ -7,6 +7,8 @@ from django.core.files.storage import default_storage
 import pandas as pd
 from django.views.decorators.csrf import csrf_exempt
 import os
+from .forms import ChangePasswordForm, LoginForm
+from django.contrib.auth import update_session_auth_hash, authenticate, login, logout
 import pyqrcode
 from PIL import Image, ImageDraw, ImageFont
 import textwrap
@@ -17,7 +19,38 @@ from django.contrib.auth.models import User
 def profile(request):
     parameters = Parameter.objects.all()
     inventory_types = InventoryType.objects.all()
-    return render(request, 'Profile.html', context={'parameters': parameters, 'inventory_types': inventory_types})
+    return render(request, 'Profile.html', context={'parameters': parameters, 'inventory_types': inventory_types,
+                                                    'change_password': ChangePasswordForm(request.user)})
+
+
+def user_login(request):
+    if request.method == 'POST':
+        form = LoginForm(request, data=request.POST)
+        if form.is_valid():
+            username = form.cleaned_data.get('username')
+            password = form.cleaned_data.get('password')
+            user = authenticate(request, username=username, password=password)
+            if user is not None:
+                if user.is_active:
+                    login(request, user)
+                    return HttpResponseRedirect(request.POST.get('next', '/'))
+                else:
+                    return HttpResponse('Disabled account')
+            else:
+                return HttpResponse('Invalid login')
+        else:
+            print(form.errors)
+            return HttpResponse('Invalid form')
+    return HttpResponseRedirect(request.POST.get('next', '/'))
+
+
+def user_logout(request):
+    logout(request)
+    return HttpResponseRedirect(request.POST.get('next', '/'))
+
+
+def main(request):
+    return render(request, 'Index.html')
 
 
 @csrf_exempt
@@ -46,13 +79,13 @@ def import_xlsx(request):
 
 def change_password(request):
     if request.method == 'POST':
-        new_password = request.POST['new_password']
-        if new_password == request.POST['confirm_password']:
-            user = request.user
-            user.set_password(new_password)
-            user.save()
+        form = ChangePasswordForm(request.user, data=request.POST or None)
+        if form.is_valid():
+            form.save()
+            update_session_auth_hash(request, form.user)
+            return JsonResponse({'status': ['Пароль поновлено!']})
         else:
-            return HttpResponse('check password')
+            return JsonResponse({'errors': form.errors}, status=500)
     return HttpResponseRedirect(request.POST.get('next', '/'))
 
 

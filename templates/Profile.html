@@ -4,18 +4,15 @@
     {% if request.user.is_superuser %}
         <a>Hello {{ request.user.username }}</a>
         <div class="FormBox">
-        <form action="{% url 'change_password' %}" method="post">
+        <form id="change_password" action="{% url 'change_password' %}" method="post">
             {% csrf_token %}
-            <div class="item">
-                <p>Новий пароль:</p>
-                <input type=password id=new_password name=new_password>
-            </div>
-            <div class="item">
-                <p>Підтвердженя паролю:</p>
-                <input type=password id=confirm_password name=confirm_password>
-            </div>
-            <div class="btn-block">
-                <button type="submit">Змінити пароль</button>
+            <div class="row justify-content-center">
+                <div class="col-md-2 text-center">
+                    <div class="form-group text-left">
+                    {{ change_password }}
+                    </div>
+                    <button type="submit" class="btn btn-primary">Змінити пароль</button>
+                </div>
             </div>
         </form>
         </div>
@@ -45,4 +42,28 @@
         </form>
         </div>
     {% endif %}
+{% endblock %}
+{% block script %}
+    <script>
+            $("#change_password").submit(function(e) {
+                e.preventDefault();
+                var form = $(this);
+                var actionUrl = form.attr('action');
+                $.ajax({
+                    type: "POST",
+                    url: actionUrl,
+                    data: form.serialize(),
+                    success: function(data)
+                    {
+                        // Object.values(data['status']).forEach((message, i) => )
+                        $.notify(data['status'], 'success')
+                        console.log(data)
+                    },
+                    error: function (data) {
+                        console.log(data)
+                        Object.values(data['responseJSON']['errors']).forEach((message, i) => $.notify(message[0], 'error'))
+                    },
+                });
+            });
+        </script>
 {% endblock %}

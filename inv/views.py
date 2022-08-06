@@ -1,7 +1,5 @@
 from django.shortcuts import render, HttpResponse, HttpResponseRedirect, redirect
 from inv.models import Parameter, Inventory, InventoryType
-from django.contrib.auth import authenticate, login, logout
-from .forms import LoginForm
 import pandas as pd
 
 
@@ -146,31 +144,6 @@ def create_parameter(request):
     else:
         return render(request, 'ParameterCreate.html', context={'parameters': parameters,
                                                                 'html_types': html_types})
-
-
-def user_login(request):
-    if request.method == 'POST':
-        form = LoginForm(request.POST)
-        if form.is_valid():
-            user = authenticate(username=form.cleaned_data['username'], password=form.cleaned_data['password'])
-            if user is not None:
-                if user.is_active:
-                    login(request, user)
-                    return HttpResponseRedirect(request.POST.get('next', '/'))
-                else:
-                    return HttpResponse('Disabled account')
-            else:
-                return HttpResponse('Invalid login')
-    return HttpResponseRedirect(request.POST.get('next', '/'))
-
-
-def user_logout(request):
-    logout(request)
-    return HttpResponseRedirect(request.POST.get('next', '/'))
-
-
-def main(request):
-    return render(request, 'Index.html')
 
 
 def parse_xlsx(filename: str):

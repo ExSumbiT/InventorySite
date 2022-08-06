@@ -31,7 +31,9 @@
 </head>
 <body class="horizontal dark">
     <div class="wrapper">
-      <nav class="navbar navbar-expand-lg navbar-light bg-white flex-row border-bottom shadow">
+        {% with form=''|login_form %}
+            {% if request.user.is_authenticated %}
+                <nav class="navbar navbar-expand-lg navbar-light bg-white flex-row border-bottom shadow">
         <div class="container-fluid">
           <a class="navbar-brand mx-lg-1 mr-0" href="{% url 'main' %}">
             <svg version="1.1" id="logo" class="navbar-brand-img brand-sm" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 120 120" xml:space="preserve">
@@ -95,64 +97,116 @@
           </ul>
         </div>
       </nav>
-      <main role="main" class="main-content">
-        <div class="container-fluid">
-          {% block content %}{% endblock %}
-        </div> <!-- .container-fluid -->
-        <div class="modal fade modal-shortcut modal-slide" tabindex="-1" role="dialog" aria-labelledby="defaultModalLabel" aria-hidden="true">
-          <div class="modal-dialog" role="document">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h5 class="modal-title" id="defaultModalLabel">Shortcuts</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
-                </button>
+                <main role="main" class="main-content">
+                    <div class="container-fluid">
+                        {% block content %}{% endblock %}
+                    </div> <!-- .container-fluid -->
+                    <div class="modal fade modal-shortcut modal-slide" tabindex="-1" role="dialog" aria-labelledby="defaultModalLabel" aria-hidden="true">
+              <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="defaultModalLabel">Shortcuts</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body px-5">
+                    <div class="row align-items-center">
+                      <div class="col-6 text-center">
+                        <div class="squircle bg-success justify-content-center" onclick='location.href="{% url 'profile' %}"'>
+                          <i class="fe fe-cpu fe-32 align-self-center text-white"></i>
+                        </div>
+                        <p>Профіль</p>
+                      </div>
+                      <div class="col-6 text-center">
+                        <div class="squircle bg-primary justify-content-center" onclick='location.href="{% url 'import_xlsx' %}"'>
+                          <i class="fe fe-activity fe-32 align-self-center text-white"></i>
+                        </div>
+                        <p>Імпорт</p>
+                      </div>
+                    </div>
+                    <div class="row align-items-center">
+                      <div class="col-6 text-center">
+                        <div class="squircle bg-primary justify-content-center">
+                          <i class="fe fe-droplet fe-32 align-self-center text-white"></i>
+                        </div>
+                        <p>Droplet</p>
+                      </div>
+                      <div class="col-6 text-center">
+                        <div class="squircle bg-primary justify-content-center">
+                          <i class="fe fe-upload-cloud fe-32 align-self-center text-white"></i>
+                        </div>
+                        <p>Upload</p>
+                      </div>
+                    </div>
+                    <div class="row align-items-center">
+                        <div class="col-6 text-center">
+                        <div class="squircle bg-primary justify-content-center">
+                          <i class="fe fe-settings fe-32 align-self-center text-white"></i>
+                        </div>
+                        <p>Settings</p>
+                      </div>
+                      <div class="col-6 text-center">
+                        <div class="squircle bg-primary justify-content-center" onclick='location.href="{% url 'user_logout' %}"'>
+                          <i class="fe fe-users fe-32 align-self-center text-white"></i>
+                        </div>
+                        <p>Вийти</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
-              <div class="modal-body px-5">
-                <div class="row align-items-center">
-                  <div class="col-6 text-center">
-                    <div class="squircle bg-success justify-content-center" onclick='location.href="{% url 'profile' %}"'>
-                      <i class="fe fe-cpu fe-32 align-self-center text-white"></i>
-                    </div>
-                    <p>Профіль</p>
-                  </div>
-                  <div class="col-6 text-center">
-                    <div class="squircle bg-primary justify-content-center" onclick='location.href="{% url 'import_xlsx' %}"'>
-                      <i class="fe fe-activity fe-32 align-self-center text-white"></i>
-                    </div>
-                    <p>Імпорт</p>
-                  </div>
-                </div>
-                <div class="row align-items-center">
-                  <div class="col-6 text-center">
-                    <div class="squircle bg-primary justify-content-center">
-                      <i class="fe fe-droplet fe-32 align-self-center text-white"></i>
-                    </div>
-                    <p>Droplet</p>
-                  </div>
-                  <div class="col-6 text-center">
-                    <div class="squircle bg-primary justify-content-center">
-                      <i class="fe fe-upload-cloud fe-32 align-self-center text-white"></i>
-                    </div>
-                    <p>Upload</p>
+            </div>
+                </main> <!-- main -->
+            {% else %}
+                <div class="wrapper vh-100">
+                  <div class="row align-items-center h-100">
+                    <form id="LoginForm" class="col-lg-3 col-md-4 col-10 mx-auto text-center" action="{% url "user_login" %}" method="post">
+                      <a class="navbar-brand mx-auto mt-2 flex-fill text-center" href="#">
+                        <svg version="1.1" id="logo" class="navbar-brand-img brand-md" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 120 120" xml:space="preserve">
+                          <g>
+                            <polygon class="st0" points="78,105 15,105 24,87 87,87 	" />
+                            <polygon class="st0" points="96,69 33,69 42,51 105,51 	" />
+                            <polygon class="st0" points="78,33 15,33 24,15 87,15 	" />
+                          </g>
+                        </svg>
+                      </a>
+                      <h1 class="h6 mb-3">Авторизація</h1>
+                        <div class="form-group">
+                            <input type="hidden" name="next" value="{{ request.path }}">
+                            {% csrf_token %}
+                            {{ form.as_p }}
+                        </div>
+                        <button class="btn btn-lg btn-primary btn-block" type="submit">Ввійти</button>
+                        <p class="mt-5 mb-3 text-muted">© 2022</p>
+                    </form>
                   </div>
                 </div>
-                <div class="row align-items-center">
-                    <div class="col-6 text-center">
-                    <div class="squircle bg-primary justify-content-center">
-                      <i class="fe fe-settings fe-32 align-self-center text-white"></i>
-                    </div>
-                    <p>Settings</p>
-                  </div>
-                  <div class="col-6 text-center">
-                    <div class="squircle bg-primary justify-content-center" onclick='location.href="{% url 'user_logout' %}"'>
-                      <i class="fe fe-users fe-32 align-self-center text-white"></i>
-                    </div>
-                    <p>Вийти</p>
-                  </div>
-                </div>
-              </div>
-      </main> <!-- main -->
+                <script>
+                    $("#LoginForm").submit(function(e) {
+                        e.preventDefault();
+                        var form = $(this);
+                        var actionUrl = form.attr('action');
+                        $.ajax({
+                            type: "POST",
+                            url: actionUrl,
+                            data: form.serialize(),
+                            success: function(data)
+                            {
+                                // Object.values(data['status']).forEach((message, i) => )
+                                $.notify(data['status'], 'success')
+                                console.log(data)
+                            },
+                            error: function (data) {
+                                console.log(data)
+                                Object.values(data['responseJSON']['errors']).
+                                forEach((message, i) => $.notify(message[0], 'error'))
+                            },
+                        });
+                    });
+                </script>
+            {% endif %}
+        {% endwith %}
     </div> <!-- .wrapper -->
     <script src="{% static 'js/jquery.min.js' %}"></script>
     <script src="{% static 'js/popper.min.js' %}"></script>
@@ -181,6 +235,7 @@
     <script src="{% static 'js/dropzone.min.js' %}"></script>
     <script src="{% static 'js/uppy.min.js' %}"></script>
     <script src="{% static 'js/quill.min.js' %}"></script>
+    <script src="{% static 'js/notify.min.js' %}"></script>
     {% block script %}
     {% endblock %}
     <script src="{% static 'js/data-rest.js' %}"></script>

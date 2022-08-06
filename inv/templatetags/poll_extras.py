@@ -1,4 +1,4 @@
-from inv.forms import LoginForm
+from UProfile.forms import LoginForm
 from django import template
 
 register = template.Library()
