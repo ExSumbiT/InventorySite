@@ -27,4 +27,4 @@ urlpatterns = [
     # path('types/update/<str:type_name>', views.update_type, name='update_type'),
     path('types/<str:type_name>', views.about_type, name='about_type'),
     path('', views.types, name='types'),
-] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+] + static(settings.STATIC_URL, document_root=settings.STATICFILES_DIRS[0])

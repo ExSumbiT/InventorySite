@@ -1,5 +1,8 @@
 from django import forms
 from django.contrib.auth.forms import PasswordChangeForm, AuthenticationForm, UsernameField
+from django.core.validators import MaxValueValidator, MinValueValidator
+from inv.models import InventoryType
+from django.utils.translation import gettext_lazy as _
 
 
 class ChangePasswordForm(PasswordChangeForm):
@@ -42,3 +45,15 @@ class LoginForm(AuthenticationForm):
     password = forms.CharField(required=True, label='Пароль', strip=False,
                                widget=forms.PasswordInput(attrs={'autocomplete': 'current-password',
                                                                  'class': 'form-control'}),)
+
+
+class QrRangeForm(forms.Form):
+    less = _("Введене значення має бути більше або рівне %(limit_value)s.")
+    more = _("Введене значення має бути менше або рівне %(limit_value)s.")
+    CHOICES = ((i.short_name, i.full_name) for i in InventoryType.objects.all())
+    inv_type = forms.ChoiceField(label='Тип', widget=forms.Select(attrs={'class': 'form-control'}), choices=CHOICES)
+    index_from = forms.IntegerField(validators=[MaxValueValidator(100, less), MinValueValidator(1, more)],
+                                    widget=forms.NumberInput(attrs={'class': 'form-control', 'value': 1}))
+    index_to = forms.IntegerField(validators=[MaxValueValidator(100, less), MinValueValidator(1, more)],
+                                  widget=forms.NumberInput(attrs={'class': 'form-control', 'value': 1}))
+

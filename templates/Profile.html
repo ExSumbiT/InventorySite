@@ -18,26 +18,15 @@
         </div>
         <br>
         <div class="FormBox">
-        <form action="{% url 'qr_range' %}" method="post">
+        <form action="{% url 'qr_range_valid' %}" method="post">
             {% csrf_token %}
-            <div class="item">
-                <p>inv_type</p>
-                <select type="text" id="inv_type" name="inv_type">
-                    {% for inventory_type in inventory_types %}
-                        <option value="{{ inventory_type.short_name }}" >{{ inventory_type.full_name }}</option>
-                    {% endfor %}
-                </select>
-            </div>
-            <div class="item">
-                <p>index_from</p>
-                <input type="number" id="index_from" name="index_from" value="1">
-            </div>
-            <div class="item">
-                <p>index_to</p>
-                <input type="number" id="index_to" name="index_to" value="1">
-            </div>
-            <div class="btn-block">
-                <button type="submit">generate range</button>
+            <div class="row justify-content-center">
+                <div class="col-md-2 text-center">
+                    <div class="form-group text-left">
+                    {{ qr_range }}
+                    </div>
+                    <button type="submit" class="btn btn-primary">generate range</button>
+                </div>
             </div>
         </form>
         </div>
@@ -45,7 +34,7 @@
 {% endblock %}
 {% block script %}
     <script>
-            $("#change_password").submit(function(e) {
+            $("form").submit(function(e) {
                 e.preventDefault();
                 var form = $(this);
                 var actionUrl = form.attr('action');
@@ -58,6 +47,9 @@
                         // Object.values(data['status']).forEach((message, i) => )
                         $.notify(data['status'], 'success')
                         console.log(data)
+                        if(data['url'] !== undefined){
+                            location.href = data['url']
+                        }
                     },
                     error: function (data) {
                         console.log(data)
