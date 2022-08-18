@@ -38,14 +38,14 @@ def user_login(request):
                 user.qr, created = QrParameters.objects.get_or_create(user=user)
                 if user.is_active:
                     login(request, user)
-                    return HttpResponseRedirect(request.POST.get('next', '/'))
+                    return JsonResponse({'status': ['Авторизація успішна!'],'url': request.POST.get('next', '/')})
                 else:
-                    return HttpResponse('Disabled account')
+                    return JsonResponse({'errors': ['Аккаунт неактивний']})
             else:
-                return HttpResponse('Invalid login')
+                return JsonResponse({'errors': ['Перевірте правильність введених даних']})
         else:
             print(form.errors)
-            return HttpResponse('Invalid form')
+            return JsonResponse({'errors': ['Невірна форма!', 'Зверніться до розробника!']})
     return HttpResponseRedirect(request.POST.get('next', '/'))
 
 

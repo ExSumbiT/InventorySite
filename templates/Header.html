@@ -114,13 +114,13 @@
                                 <div class="modal-body px-5">
                                     <div class="row align-items-center">
                                         <div class="col-6 text-center">
-                                            <div class="squircle bg-primary justify-content-center" onclick='location.href="{% url 'profile' %}"'>
+                                            <div class="squircle bg-primary justify-content-center" onclick='location.href=`{% url "profile" %}`'>
                                                 <i class="fe fe-cpu fe-32 align-self-center text-white"></i>
                                             </div>
                                             <p>Профіль</p>
                                         </div>
                                         <div class="col-6 text-center">
-                                            <div class="squircle bg-primary justify-content-center" onclick='location.href="{% url 'import_xlsx' %}"'>
+                                            <div class="squircle bg-primary justify-content-center" onclick='location.href=`{% url "import_xlsx" %}`'>
                                                 <i class="fe fe-activity fe-32 align-self-center text-white"></i>
                                             </div>
                                             <p>Імпорт</p>
@@ -148,7 +148,7 @@
                                             <p>Settings</p>
                                         </div>
                                         <div class="col-6 text-center">
-                                            <div class="squircle bg-primary justify-content-center" onclick='location.href="{% url 'user_logout' %}"'>
+                                            <div class="squircle bg-primary justify-content-center" onclick='location.href=`{% url "user_logout" %}`'>
                                                 <i class="fe fe-users fe-32 align-self-center text-white"></i>
                                             </div>
                                             <p>Вийти</p>
@@ -169,7 +169,7 @@
             {% else %}
                 <div class="wrapper vh-100">
                   <div class="row align-items-center h-100">
-                    <form id="LoginForm" class="col-lg-3 col-md-4 col-10 mx-auto text-center" action="{% url "user_login" %}" method="post">
+                    <form id="LoginForm" class="col-lg-3 col-md-4 col-10 mx-auto text-center" action="{% url 'user_login' %}" method="post">
                       <a class="navbar-brand mx-auto mt-2 flex-fill text-center" href="#">
                         <svg version="1.1" id="logo" class="navbar-brand-img brand-md" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 120 120" xml:space="preserve">
                           <g>
@@ -204,6 +204,9 @@
                                 // Object.values(data['status']).forEach((message, i) => )
                                 $.notify(data['status'], 'success')
                                 console.log(data)
+                                if(data['url'] !== undefined){
+                                  location.href = data['url']
+                                }
                             },
                             error: function (data) {
                                 console.log(data)

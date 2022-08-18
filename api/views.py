@@ -7,7 +7,7 @@ from rest_framework.decorators import api_view
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.parsers import JSONParser
 
-
+# TODO: додати підтримку сповіщень при поверненні з функції
 @csrf_exempt
 @api_view(['GET', 'PUT', 'DELETE'])
 def type_index(request, type_name, index):
