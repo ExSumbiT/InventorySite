@@ -38,8 +38,8 @@ class ChangePasswordForm(PasswordChangeForm):
 
 
 class LoginForm(AuthenticationForm):
-    error_messages = {'password_incorrect': "Хибний пароль",
-                      'invalid_login': "Хибне ім'я користувача"}
+    error_messages = {'inactive': "Аккаунт неактивний",
+                      'invalid_login': "Хибне ім'я користувача або пароль"}
     username = UsernameField(required=True, label='Ім\'я користувача',
                              widget=forms.TextInput(attrs={'autofocus': True, 'class': 'form-control'}))
     password = forms.CharField(required=True, label='Пароль', strip=False,

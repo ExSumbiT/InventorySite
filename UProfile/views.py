@@ -34,18 +34,11 @@ def user_login(request):
             username = form.cleaned_data.get('username')
             password = form.cleaned_data.get('password')
             user = authenticate(request, username=username, password=password)
-            if user is not None:
-                user.qr, created = QrParameters.objects.get_or_create(user=user)
-                if user.is_active:
-                    login(request, user)
-                    return JsonResponse({'status': ['Авторизація успішна!'],'url': request.POST.get('next', '/')})
-                else:
-                    return JsonResponse({'errors': ['Аккаунт неактивний']})
-            else:
-                return JsonResponse({'errors': ['Перевірте правильність введених даних']})
+            user.qr, created = QrParameters.objects.get_or_create(user=user)
+            login(request, user)
+            return JsonResponse({'status': ['Авторизація успішна!'],'url': request.POST.get('next', '/')})
         else:
-            print(form.errors)
-            return JsonResponse({'errors': ['Невірна форма!', 'Зверніться до розробника!']})
+            return JsonResponse({'errors': form.errors}, status=500)
     return HttpResponseRedirect(request.POST.get('next', '/'))
 
 

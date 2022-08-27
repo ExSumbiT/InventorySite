@@ -13,4 +13,7 @@ class QrParameters(models.Model):
 
     def __init__(self, user, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.user = User.objects.get(id=user)
+        try:
+            self.user = User.objects.get(id=user)
+        except:
+            self.user = User.objects.get(id=user.id)

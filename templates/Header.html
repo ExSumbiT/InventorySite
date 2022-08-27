@@ -205,7 +205,9 @@
                                 $.notify(data['status'], 'success')
                                 console.log(data)
                                 if(data['url'] !== undefined){
-                                  location.href = data['url']
+                                  setTimeout(function(){ 
+                                    location.href = data['url']
+                                  }, 1000);  
                                 }
                             },
                             error: function (data) {
