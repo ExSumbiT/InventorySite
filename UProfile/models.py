@@ -11,9 +11,22 @@ class QrParameters(models.Model):
     description_logo = models.BooleanField(default=True)
     logo_size = models.IntegerField(default=30)
 
-    def __init__(self, user, *args, **kwargs):
+    def __init__(self, user=None, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        try:
-            self.user = User.objects.get(id=user)
-        except:
-            self.user = User.objects.get(id=user.id)
+        if user is not None:
+            try:
+                self.user = User.objects.get(id=user)
+            except:
+                self.user = User.objects.get(id=user.id)
+    
+    def update(self, *args, **kwargs):
+            for name, values in kwargs.items():
+                try:
+                    print(name, values)
+                    setattr(self,name,values)
+                except KeyError:
+                    pass
+            self.save()
+    
+    def items(self):
+        return {k: v for k, v in self.__dict__}

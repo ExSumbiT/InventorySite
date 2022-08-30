@@ -28,6 +28,7 @@ urlpatterns = [
     path('qr/', views.qr, name='qr'),
     path('qr_range/<str:inv_type>/<str:index_from>/<str:index_to>', views.qr_range, name='qr_range'),
     path('qr_range_valid/', views.qr_range_valid, name='qr_range_valid'),
+    path('qr_parameters_valid/', views.qr_parameters_valid, name='qr_parameters_valid'),
     # path('qr_generator/', views.qr_generator, name='qr_generator'),
     path('change_password/', views.change_password, name='change_password'),
     path('import/preview/', views.preview, name='preview'),

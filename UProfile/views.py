@@ -1,3 +1,4 @@
+from importlib.metadata import requires
 from django.shortcuts import render, HttpResponseRedirect, HttpResponse
 from django.http import JsonResponse
 from django.conf import settings
@@ -12,7 +13,7 @@ from django.views.decorators.csrf import csrf_exempt
 import os
 from .models import QrParameters
 from django.contrib.auth.models import User
-from .forms import ChangePasswordForm, LoginForm, QrRangeForm
+from .forms import ChangePasswordForm, LoginForm, QrRangeForm, QrParametersForm
 from django.contrib.auth import update_session_auth_hash, authenticate, login, logout
 import pyqrcode
 from PIL import Image, ImageDraw, ImageFont
@@ -23,11 +24,11 @@ from zipfile import ZipFile
 def profile(request):
     parameters = Parameter.objects.all()
     return render(request, 'Profile.html', context={'parameters': parameters, 'qr_range': QrRangeForm,
-                                                    'change_password': ChangePasswordForm(request.user)})
+                                                    'change_password': ChangePasswordForm(request.user),
+                                                    'qr_parameters': QrParametersForm(request.user)})
 
 
 def user_login(request):
-    # TODO: fix redirect adter login
     if request.method == 'POST':
         form = LoginForm(request, data=request.POST)
         if form.is_valid():
@@ -153,6 +154,19 @@ def qr_range_valid(request):
             index_to = form.cleaned_data.get('index_to')
             return JsonResponse({'status': ['Успішно згенеровано!'],
                                  'url': reverse('qr_range', args=(inv_type, index_from, index_to))})
+        else:
+            return JsonResponse({'errors': form.errors}, status=500)
+
+
+def qr_parameters_valid(request):
+    if request.method == 'POST':
+        form = QrParametersForm(request.user, request.POST or None)
+        if form.is_valid():
+            qrp = QrParameters.objects.filter(user=request.user).first()
+            print(form.cleaned_data)
+            qrp.update(**form.cleaned_data)
+            qrp.save()
+            return JsonResponse({'status': ['Параметри успішно збережено!'], 'data': form.cleaned_data})
         else:
             return JsonResponse({'errors': form.errors}, status=500)
 

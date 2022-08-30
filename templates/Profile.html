@@ -25,7 +25,21 @@
                     <div class="form-group text-left">
                     {{ qr_range }}
                     </div>
-                    <button type="submit" class="btn btn-primary">generate range</button>
+                    <button type="submit" class="btn btn-primary">Згенерувати</button>
+                </div>
+            </div>
+        </form>
+        </div>
+        <br>
+        <div class="FormBox">
+        <form action="{% url 'qr_parameters_valid' %}" method="post">
+            {% csrf_token %}
+            <div class="row justify-content-center">
+                <div class="col-md-2 text-center">
+                    <div class="form-group text-left">
+                    {{ qr_parameters }}
+                    </div>
+                    <button type="submit" class="btn btn-primary">Зберегти</button>
                 </div>
             </div>
         </form>
