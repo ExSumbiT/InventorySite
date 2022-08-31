@@ -23,6 +23,7 @@ from zipfile import ZipFile
 
 def profile(request):
     parameters = Parameter.objects.all()
+    print('template')
     return render(request, 'Profile.html', context={'parameters': parameters, 'qr_range': QrRangeForm,
                                                     'change_password': ChangePasswordForm(request.user),
                                                     'qr_parameters': QrParametersForm(request.user)})
@@ -89,6 +90,7 @@ def change_password(request):
 
 
 def qr_create(inv_type: str, ind: str, url: str, qrp: QrParameters):
+    print(qrp.__dict__)
     if not os.path.exists(os.path.join(settings.MEDIA_ROOT, f'qr-code/{inv_type}')):
         os.makedirs(os.path.join(settings.MEDIA_ROOT, f'qr-code/{inv_type}'))
     if not os.path.exists(os.path.join(settings.MEDIA_ROOT, f'temp')):

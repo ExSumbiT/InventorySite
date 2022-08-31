@@ -4,6 +4,7 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 from inv.models import InventoryType
 from django.contrib.auth.models import User
 from .models import QrParameters
+from .serializers import QrParametersSerializer
 from django.utils.translation import gettext_lazy as _
 
 
@@ -70,8 +71,7 @@ class QrParametersForm(forms.Form):
     logo_size = forms.IntegerField(label='Розмір логотипу', initial=30, widget=forms.NumberInput(attrs={'class': 'form-control'}))
 
     def __init__(self, user=None, *args, **kwargs):
-        qrp = user.qr.items()
-        print(qrp)
+        qrp = user.qr
         super(QrParametersForm, self).__init__(*args, **kwargs)
         if user is not None:
             self.fields['weight'].initial = qrp.weight
