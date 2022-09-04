@@ -2,6 +2,7 @@
 {% load static %}
 {% block link %}
 <link rel="stylesheet" href="{% static 'css/dataTables.bootstrap4.css' %}">
+<link rel="stylesheet" href="{% static 'css/buttons.dataTables.min.css' %}">
 {% endblock %}
 {% block title %}Типи{% endblock %}
 {% block content %}
@@ -96,9 +97,15 @@
 {% endblock %}
 {% block script %}
     <script src="{% static 'js/jquery.dataTables.min.js' %}"></script>
+    <script src="{% static 'js/dataTables.buttons.min.js' %}"></script>
     <script src="{% static 'js/dataTables.bootstrap4.min.js' %}"></script>
     <script>
         {% if deep %}
+        function add_event() {
+            const next_id = {{ next_id }}
+            location.href = location.href + '/' + next_id
+        }
+
         $('#varyModal').on('show.bs.modal', function (event) {
             var button = $(event.relatedTarget)
             var index = button.data('index')
@@ -133,10 +140,23 @@
             });
         })
         {% endif %}
+        $.fn.dataTable.Buttons.defaults.dom.button.className = 'btn';
         $('#dataTable-1').DataTable(
             {
+                dom: 'Bfrtip',
+                buttons: [
+                    {
+                        text: 'Додати',
+                        className: 'btn-secondary',
+                        action: function ( e, dt, node, config ) {
+                            add_event()
+                            {% comment %} dt.ajax.reload() {% endcomment %}
+                        }
+                    }
+                ],
                 autoWidth: true,
                 paging: false,
             });
+            {% comment %} $.fn.dataTable.Editor.classes.form.button = "btn"; {% endcomment %}
     </script>
 {% endblock %}

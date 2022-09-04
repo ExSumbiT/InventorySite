@@ -66,8 +66,10 @@ def type_list(request, type_name):
                     values[index].append(obj.value.split(' ')[0])
                 else:
                     values[index].append(obj.value)
+    last = Inventory.objects.filter(type__short_name=type_name).order_by('-index').first()
+    next_id = last.index + 1 if last else 1
     return render(request, 'Types.html', context={'parameters': parameters, 'values': values.items(),
-                                                  'deep': True, 'type_name': type_name})
+                                                  'deep': True, 'type_name': type_name, 'next_id': next_id})
 
 
 def types(request):
